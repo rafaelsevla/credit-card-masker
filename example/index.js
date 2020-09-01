@@ -1,6 +1,5 @@
 
 function defaultMask (value) {
-  console.log('default')
   return value
     .replace(/\D/g, '')
     .replace(/(\d{4})(\d)/, '$1 $2')
@@ -9,8 +8,7 @@ function defaultMask (value) {
     .replace(/(\s\d{4})\d+?$/, '$1');
 }
 
-function defaultUntil19Digits (value) {
-  console.log('visa')
+function defaultUntil19Digits (value){
   return value
     .replace(/\D/g, '')
     .replace(/(\d{4})(\d)/, '$1 $2')
@@ -20,8 +18,7 @@ function defaultUntil19Digits (value) {
     .replace(/(\s\d{3})\d+?$/, '$1');
 }
 
-function amex (value) {
-  console.log('amex')
+function amex (value){
   return value
     .replace(/\D/g, '')
     .replace(/(\d{4})(\d)/, '$1 $2')
@@ -29,8 +26,7 @@ function amex (value) {
     .replace(/(-\d{5})\d+?$/, '$1');
 }
 
-function dinners (value) {
-  console.log('dinners')
+function dinners (value){
   return value
     .replace(/\D/g, '')
     .replace(/(\d{4})(\d)/, '$1 $2')
@@ -40,11 +36,17 @@ function dinners (value) {
 }
 
 function checkDinners (splittedNumber) {
-  return splittedNumber.slice(0,3).join('') >= 300 && splittedNumber.slice(0,3).join('') <= 305 || splittedNumber.slice(0,2).join('') === '36'
+  return (
+    splittedNumber.slice(0,3).join('') >= '300' &&
+    splittedNumber.slice(0,3).join('') <= '305' ||
+    splittedNumber.slice(0,2).join('') === '36'
+  );
 }
 
 function checkVisa (splittedNumber) {
-  return splittedNumber[0] === '4';
+  return (
+    splittedNumber[0] === '4'
+  );
 }
 
 function checkAmex (splittedNumber) {
@@ -52,19 +54,21 @@ function checkAmex (splittedNumber) {
 }
 
 function checkJCB (splittedNumber) {
-  return splittedNumber.slice(0,4).join('') >= 3528 && splittedNumber.slice(0,4).join('') <= 3589;
+  return splittedNumber.slice(0,4).join('') >= '3528' && splittedNumber.slice(0,4).join('') <= '3589';
 }
 
 function checkDiscover (splittedNumber) {
+  const firstSixDigits = splittedNumber.join('').replace(' ', '').split('').slice(0, 6).join('');
+
   return (
     splittedNumber.slice(0,2).join('') === '65' ||
-    splittedNumber.slice(0,3).join('') >= 644 && splittedNumber.slice(0,3).join('') <= 649 ||
+    splittedNumber.slice(0,3).join('') >= '644' && splittedNumber.slice(0,3).join('') <= '649' ||
     splittedNumber.slice(0,4).join('') === '6011' ||
-    splittedNumber.slice(0,6).join('') >= 622126 && splittedNumber.slice(0,6).join('') <= 622925
-  )
+    firstSixDigits >= '622126' && firstSixDigits <= '622925'
+  );
 }
 
-function checkMaestro (splittedNumber) {
+function checkMaestro (splittedNumber)  {
   return (
     splittedNumber.slice(0,4).join('') === '5018' ||
     splittedNumber.slice(0,4).join('') === '5020' ||
@@ -94,3 +98,11 @@ function maskCreditCard (value) {
 
   return defaultMask(value);
 }
+
+const input = document.querySelector('[data-js="credit-card-input"]');
+
+input.addEventListener(
+  'input',
+  e => e.target.value = maskCreditCard(e.target.value),
+  false
+)
